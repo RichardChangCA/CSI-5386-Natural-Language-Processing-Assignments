@@ -1,14 +1,15 @@
 1
 0	!	1
 1	,	1
-2	He	1
-3	It	1
-4	What	1
-5	and	1
-6	assgnments	1
-7	doing	1
-8	his	1
-9	is	1
+2	and	1
+3	assgnments	1
+4	doing	1
+5	has	1
+6	he	1
+7	his	1
+8	is	1
+9	it	1
 10	problem	1
 11	tedious	1
 12	the	1
+13	what	1
