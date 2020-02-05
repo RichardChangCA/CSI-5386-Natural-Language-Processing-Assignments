@@ -1,60 +1,40 @@
 0:
-Save BBC World Service from Savage Cuts http://www.petitionbuzz.com/petitions/savews
-['save', 'bbc', 'world', 'service', 'from', 'savage', 'cuts', 'http://www.petitionbuzz.com/petitions/savews', '\n']
+Save BBC World Service from Savage Cuts http://www.petitionbuzz.com/petitions/savews['save', 'bbc', 'world', 'service', 'from', 'savage', 'cuts', 'http://www.petitionbuzz.com/petitions/savews']
 1:
-a lot of people always make fun about the end of the world but the question is.."ARE U READY FOR IT?..
-['a', 'lot', 'of', 'people', 'always', 'make', 'fun', 'about', 'the', 'end', 'of', 'the', 'world', 'but', 'the', 'question', 'is', '..', '"are', 'u', 'ready', 'for', 'it', '?', '..', '\n']
+a lot of people always make fun about the end of the world but the question is.."ARE U READY FOR IT?..['a', 'lot', 'of', 'people', 'always', 'make', 'fun', 'about', 'the', 'end', 'of', 'the', 'world', 'but', 'the', 'question', 'is', '..', '"are', 'u', 'ready', 'for', 'it', '?', '..']
 2:
-ReThink Group positive in outlook: Technology staffing specialist the ReThink Group expects revenues to be “marg... http://bit.ly/hFjtmY
-['rethink', 'group', 'positive', 'in', 'outlook', ':', 'technology', 'staffing', 'specialist', 'the', 'rethink', 'group', 'expects', 'revenues', 'to', 'be', '“', 'marg', '...', 'http://bit.ly/hfjtmy', '\n']
+ReThink Group positive in outlook: Technology staffing specialist the ReThink Group expects revenues to be “marg... http://bit.ly/hFjtmY['rethink', 'group', 'positive', 'in', 'outlook', ':', 'technology', 'staffing', 'specialist', 'the', 'rethink', 'group', 'expects', 'revenues', 'to', 'be', '“', 'marg', '...', 'http://bit.ly/hfjtmy']
 3:
-'Zombie' fund manager Phoenix appoints new CEO: Phoenix buys up funds that have been closed to new business and ... http://bit.ly/dXrlH5
-["'", 'zombie', "'", 'fund', 'manager', 'phoenix', 'appoints', 'new', 'ceo', ':', 'phoenix', 'buys', 'up', 'funds', 'that', 'have', 'been', 'closed', 'to', 'new', 'business', 'and', '...', 'http://bit.ly/dxrlh5', '\n']
+'Zombie' fund manager Phoenix appoints new CEO: Phoenix buys up funds that have been closed to new business and ... http://bit.ly/dXrlH5["'", 'zombie', "'", 'fund', 'manager', 'phoenix', 'appoints', 'new', 'ceo', ':', 'phoenix', 'buys', 'up', 'funds', 'that', 'have', 'been', 'closed', 'to', 'new', 'business', 'and', '...', 'http://bit.ly/dxrlh5']
 4:
-Latest:: Top World Releases http://globalclassified.net/2011/02/top-world-releases-2/
-['latest', ':', ':', 'top', 'world', 'releases', 'http://globalclassified.net/2011/02/top-world-releases-2/', '\n']
+Latest:: Top World Releases http://globalclassified.net/2011/02/top-world-releases-2/['latest', ':', ':', 'top', 'world', 'releases', 'http://globalclassified.net/2011/02/top-world-releases-2/']
 5:
-CDT presents ALICE IN WONDERLAND - Catonsville Dinner has posted 'CDT presents ALICE IN WONDERLAND' to the... http://fb.me/GMicayT3
-['cdt', 'presents', 'alice', 'in', 'wonderland', '-', 'catonsville', 'dinner', 'has', 'posted', "'", 'cdt', 'presents', 'alice', 'in', 'wonderland', "'", 'to', 'the', '...', 'http://fb.me/gmicayt3', '\n']
+CDT presents ALICE IN WONDERLAND - Catonsville Dinner has posted 'CDT presents ALICE IN WONDERLAND' to the... http://fb.me/GMicayT3['cdt', 'presents', 'alice', 'in', 'wonderland', '-', 'catonsville', 'dinner', 'has', 'posted', "'", 'cdt', 'presents', 'alice', 'in', 'wonderland', "'", 'to', 'the', '...', 'http://fb.me/gmicayt3']
 6:
-Territory Manager: Location: Calgary, Alberta, CANADA Job Category: bu... http://bit.ly/e3o7mt #jobs
-['territory', 'manager', ':', 'location', ':', 'calgary', ',', 'alberta', ',', 'canada', 'job', 'category', ':', 'bu', '...', 'http://bit.ly/e3o7mt', '#', 'jobs', '\n']
+Territory Manager: Location: Calgary, Alberta, CANADA Job Category: bu... http://bit.ly/e3o7mt #jobs['territory', 'manager', ':', 'location', ':', 'calgary', ',', 'alberta', ',', 'canada', 'job', 'category', ':', 'bu', '...', 'http://bit.ly/e3o7mt', '#', 'jobs']
 7:
-I cud murder sum1 today n not even flinch I'm tht fukin angry today
-['i', 'cud', 'murder', 'sum1', 'today', 'n', 'not', 'even', 'flinch', 'i', 'tht', 'fukin', 'angry', 'today', '\n']
+I cud murder sum1 today n not even flinch I'm tht fukin angry today['i', 'cud', 'murder', 'sum1', 'today', 'n', 'not', 'even', 'flinch', 'i', 'am', 'tht', 'fukin', 'angry', 'today']
 8:
-BBC News - Today - Free school funding plans 'lack transparency' - http://news.bbc.co.uk/today/hi/today/newsid_9389000/9389467.stm …
-['bbc', 'news', '-', 'today', '-', 'free', 'school', 'funding', 'plans', "'", 'lack', 'transparency', "'", '-', 'http://news.bbc.co.uk', '/', 'today', '/', 'hi', '/', 'today', '/', 'newsid_9389000/9389467.stm', '\xa0', '…', '\n']
+BBC News - Today - Free school funding plans 'lack transparency' - http://news.bbc.co.uk/today/hi/today/newsid_9389000/9389467.stm …['bbc', 'news', '-', 'today', '-', 'free', 'school', 'funding', 'plans', "'", 'lack', 'transparency', "'", '-', 'http://news.bbc.co.uk', '/', 'today', '/', 'hi', '/', 'today', '/', 'newsid_9389000/9389467.stm', '\xa0', '…']
 9:
-Manchester City Council details saving cuts plan: http://bbc.in/fYPYPC ...Depressing. Apparently we’re 4th most deprived & top 5 hardest hit
-['manchester', 'city', 'council', 'details', 'saving', 'cuts', 'plan', ':', 'http://bbc.in/fypypc', '...', 'depressing', '.', 'apparently', 'we', '’re', '4th', 'most', 'deprived', '&', 'top', '5', 'hardest', 'hit', '\n']
+Manchester City Council details saving cuts plan: http://bbc.in/fYPYPC ...Depressing. Apparently we’re 4th most deprived & top 5 hardest hit['manchester', 'city', 'council', 'details', 'saving', 'cuts', 'plan', ':', 'http://bbc.in/fypypc', '...', 'depressing', '.', 'apparently', 'we', '’re', '4th', 'most', 'deprived', '&', 'top', '5', 'hardest', 'hit']
 10:
-http://bit.ly/e0ujdP, if you are interested in professional global translation services
-['http://bit.ly/e0ujdp', ',', 'if', 'you', 'are', 'interested', 'in', 'professional', 'global', 'translation', 'services', '\n']
+http://bit.ly/e0ujdP, if you are interested in professional global translation services['http://bit.ly/e0ujdp', ',', 'if', 'you', 'are', 'interested', 'in', 'professional', 'global', 'translation', 'services']
 11:
-Fitness First to float but isn't the full service model dead ? http://bit.ly/evflEb
-['fitness', 'first', 'to', 'float', 'but', 'is', 'the', 'full', 'service', 'model', 'dead', '?', 'http://bit.ly/evfleb', '\n']
+Fitness First to float but isn't the full service model dead ? http://bit.ly/evflEb['fitness', 'first', 'to', 'float', 'but', 'is', 'not', 'the', 'full', 'service', 'model', 'dead', '?', 'http://bit.ly/evfleb']
 12:
-David Cook ! http://bit.ly/fkj2gk has the mostest beautiful smile in the world!
-['david', 'cook', '!', 'http://bit.ly/fkj2gk', 'has', 'the', 'mostest', 'beautiful', 'smile', 'in', 'the', 'world', '!', '\n']
+David Cook ! http://bit.ly/fkj2gk has the mostest beautiful smile in the world!['david', 'cook', '!', 'http://bit.ly/fkj2gk', 'has', 'the', 'mostest', 'beautiful', 'smile', 'in', 'the', 'world', '!']
 13:
-Piss off. Cnt stand lick asses
-['piss', 'off', '.', 'cnt', 'stand', 'lick', 'asses', '\n']
+Piss off. Cnt stand lick asses['piss', 'off', '.', 'cnt', 'stand', 'lick', 'asses']
 14:
-BEWARE THE BLUE MEANIES: http://bit.ly/hu8iJz #cuts #thebluemeanies
-['beware', 'the', 'blue', 'meanies', ':', 'http://bit.ly/hu8ijz', '#', 'cuts', '#', 'thebluemeanies', '\n']
+BEWARE THE BLUE MEANIES: http://bit.ly/hu8iJz #cuts #thebluemeanies['beware', 'the', 'blue', 'meanies', ':', 'http://bit.ly/hu8ijz', '#', 'cuts', '#', 'thebluemeanies']
 15:
-Como perde os dentes no World Of Warcraft - Via Alisson http://ow.ly/1beBPo
-['como', 'perde', 'os', 'dentes', 'no', 'world', 'of', 'warcraft', '-', 'via', 'alisson', 'http://ow.ly/1bebpo', '\n']
+Como perde os dentes no World Of Warcraft - Via Alisson http://ow.ly/1beBPo['como', 'perde', 'os', 'dentes', 'no', 'world', 'of', 'warcraft', '-', 'via', 'alisson', 'http://ow.ly/1bebpo']
 16:
-How exciting! RT @BunchesUK: Hello! What's happening in your world? We're all gearing up for #Valentines with bouquets flying out the door.
-['how', 'exciting', '!', 'rt', '@bunchesuk', ':', 'hello', '!', 'what', 'has', 'happening', 'in', 'your', 'world', '?', 'we', 'all', 'gearing', 'up', 'for', '#', 'valentines', 'with', 'bouquets', 'flying', 'out', 'the', 'door', '.', '\n']
+How exciting! RT @BunchesUK: Hello! What's happening in your world? We're all gearing up for #Valentines with bouquets flying out the door.['how', 'exciting', '!', 'rt', '@bunchesuk', ':', 'hello', '!', 'what', 'has', 'happening', 'in', 'your', 'world', '?', 'we', 'are', 'all', 'gearing', 'up', 'for', '#', 'valentines', 'with', 'bouquets', 'flying', 'out', 'the', 'door', '.']
 17:
-I'd very much appreciate it if people would stop broadcasting asking me to add people on BBM.
-['i', 'had', 'very', 'much', 'appreciate', 'it', 'if', 'people', 'would', 'stop', 'broadcasting', 'asking', 'me', 'to', 'add', 'people', 'on', 'bbm', '.', '\n']
+I'd very much appreciate it if people would stop broadcasting asking me to add people on BBM.['i', 'had', 'very', 'much', 'appreciate', 'it', 'if', 'people', 'would', 'stop', 'broadcasting', 'asking', 'me', 'to', 'add', 'people', 'on', 'bbm', '.']
 18:
-@samanthaprabu sam i knw u r a cricket fan r u watching any of the world cup matches
-['@samanthaprabu', 'sam', 'i', 'knw', 'u', 'r', 'a', 'cricket', 'fan', 'r', 'u', 'watching', 'any', 'of', 'the', 'world', 'cup', 'matches', '\n']
+@samanthaprabu sam i knw u r a cricket fan r u watching any of the world cup matches['@samanthaprabu', 'sam', 'i', 'knw', 'u', 'r', 'a', 'cricket', 'fan', 'r', 'u', 'watching', 'any', 'of', 'the', 'world', 'cup', 'matches']
 19:
-John Baer: Who didn't see this coming?: TO THOSE who know Ed and Midge Rendell - heck, to the Philly world at la... http://bit.ly/ii6WEO
-['john', 'baer', ':', 'who', 'did', 'see', 'this', 'coming', '?', ':', 'to', 'those', 'who', 'know', 'ed', 'and', 'midge', 'rendell', '-', 'heck', ',', 'to', 'the', 'philly', 'world', 'at', 'la', '...', 'http://bit.ly/ii6weo', '\n']
+John Baer: Who didn't see this coming?: TO THOSE who know Ed and Midge Rendell - heck, to the Philly world at la... http://bit.ly/ii6WEO['john', 'baer', ':', 'who', 'did', 'not', 'see', 'this', 'coming', '?', ':', 'to', 'those', 'who', 'know', 'ed', 'and', 'midge', 'rendell', '-', 'heck', ',', 'to', 'the', 'philly', 'world', 'at', 'la', '...', 'http://bit.ly/ii6weo']

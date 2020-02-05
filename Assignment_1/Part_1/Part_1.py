@@ -9,6 +9,7 @@ import nltk
 from nltk.tokenize import word_tokenize
 from spacy.symbols import ORTH, LEMMA, POS, TAG
 from gensim.corpora import Dictionary
+import re
 # Load English tokenizer, tagger, parser, NER and word vectors
 nlp = English()
 
@@ -52,8 +53,12 @@ def tokenization_statistic(tokenization_all,Tokens_file_name,results_file_name):
 with open("transfered_special_case_2.txt","r") as f:
     for line in f:
         special_case = []
+        line = line.strip('\n')
         splitted_line = line.split(" ")
-        for item_num in range(1,len(splitted_line)-1):
+        if('' in splitted_line):
+            splitted_line.remove('')
+        # print(splitted_line)
+        for item_num in range(1,len(splitted_line)):
             special_case.append({ORTH:splitted_line[item_num]})
         nlp.tokenizer.add_special_case(splitted_line[0], special_case)
 
@@ -69,6 +74,8 @@ tokenization_all = []
 for text_line in all_text:
 
     # tokenization_results = word_tokenize(text_line)
+    text_line = text_line.strip('\n')
+    text_line = re.sub(' +', ' ', text_line)
     tokenization_results = [w.text.lower() for w in nlp(text_line)]
 
     tokenization_all += tokenization_results
@@ -122,7 +129,7 @@ for item in bigram_frequency.keys():
 bigrams_list = sorted(bigrams_list,key=lambda x: x[1],reverse=True)
 
 num = 0
-with open("bigrams",'w') as bigrams_file:
+with open("bigrams.txt",'w') as bigrams_file:
     bigrams_file.write("number" + " " + "word" + " " + "frequency" +"\n")
     for item in bigrams_list:
         bigrams_file.write(str(num) + " " + item[0][0] +" "+ item[0][1] + " " + str(item[1]) +"\n")
