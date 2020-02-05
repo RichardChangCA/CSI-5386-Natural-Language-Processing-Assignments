@@ -1,0 +1,3 @@
+unique_token_numbers:96306
+token_numbers:551126
+type/token ratio:0.17474406941425372

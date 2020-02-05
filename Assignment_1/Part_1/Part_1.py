@@ -1,48 +1,52 @@
 from spacy.lang.en import English
 from spacy.tokenizer import Tokenizer
+
+# # in the first time you should use these two line codes
+# import nltk
+# nltk.download('punkt')
+
+import nltk
 from nltk.tokenize import word_tokenize
 from spacy.symbols import ORTH, LEMMA, POS, TAG
+from gensim.corpora import Dictionary
 # Load English tokenizer, tagger, parser, NER and word vectors
 nlp = English()
-# nlp = Tokenizer(nlp.vocab)
-# nlp = nlp.Defaults.create_tokenizer(nlp)
 
 
-# all_text =  open('twitter_corpus.txt', 'r')
-# for text_line in all_text:
-#     print(text_line)
+def tokenization_statistic(tokenization_all,Tokens_file_name,results_file_name):
+    dct = Dictionary([tokenization_all])  # initialize a Dictionary
+    # print(dct)
+    unique_token_numbers = len(dct)
+    # print("unique_token_numbers:",unique_token_numbers)
 
-#     #  "nlp" Object is used to create documents with linguistic annotations.
-#     my_doc = nlp(text_line)
+    word_frequency = []
+    for word in tokenization_all:
+        word_frequency.append(tokenization_all.count(word))
+    num = 0
+    dct_pairs = sorted(list(set(list(zip(tokenization_all,word_frequency)))),key=lambda x: x[1],reverse=True)
+    with open(Tokens_file_name,'w') as frequency_file:
+        frequency_file.write("number" + " " + "word" + " " + "frequency" +"\n")
+        for item in dct_pairs:
+            frequency_file.write(str(num) + " " + item[0] + " " + str(item[1]) +"\n")
+            num += 1
+    bag_of_words = dct.doc2bow(tokenization_all)
+    # print(bag_of_words)
+    token_numbers = 0
+    for i in bag_of_words:
+        token_numbers += i[1]
+    # print("token_numbers:",token_numbers)
 
-#     # Create list of word tokens
-#     token_list = []
-#     for token in my_doc:
-#         token_list.append(token.text)
-#     print(token_list)
+    ratio = unique_token_numbers / token_numbers
+
+    # print("type/token ratio:", ratio)
+
+    with open(results_file_name, 'w') as f_ttr_results:
+        f_ttr_results.write("unique_token_numbers:"+str(unique_token_numbers)+"\n")
+        f_ttr_results.write("token_numbers:"+str(token_numbers)+"\n")
+        f_ttr_results.write("type/token ratio:"+str(ratio)+"\n")
     
 # encoding='utf-8-sig' is to remove \ufeff
-# all_text =  open('twitter_corpus.txt', 'r', encoding='utf-8-sig')
-# for text_line in all_text:
-#     print(text_line)
-
-#     tokenization_results = word_tokenize(text_line)
-    
-#     print(tokenization_results)
-
-
-# capitalize the word
-title = "it's"
-print(title)
-title = title.capitalize()
-print(title)
-title = title.lower()
-print(title)
-
-# handling the special case demo
-print("What's the problem, He is doing his assgnments and It's tedious!!")
-doc = nlp(u"What's the problem, He is doing his assgnments and It's tedious!!")
-print([w.text for w in doc])
+# write the result into .txt file
 
 # special case is sensitive
 with open("transfered_special_case_2.txt","r") as f:
@@ -53,40 +57,36 @@ with open("transfered_special_case_2.txt","r") as f:
             special_case.append({ORTH:splitted_line[item_num]})
         nlp.tokenizer.add_special_case(splitted_line[0], special_case)
 
-# special_case = [{ORTH:u"He", LEMMA:u"He", POS:u"PRONOUN"}, {ORTH:u"is"}]
-# nlp.tokenizer.add_special_case(u"He's", special_case)
-# special_case = [{ORTH:u"What", LEMMA:u"What", POS:u"PRONOUN"}, {ORTH:u"is"}]
-# nlp.tokenizer.add_special_case(u"What's", special_case)
-# special_case = [{ORTH:u"It", LEMMA:u"It", POS:u"PRONOUN"}, {ORTH:u"is"}]
-# nlp.tokenizer.add_special_case(u"It's", special_case)
+all_text =  open('twitter_corpus.txt', 'r', encoding='utf-8-sig')
 
-tokens_example = [w.text.lower() for w in nlp(u"What's the problem, He is doing his assgnments and It's tedious!!")]
+f_tokenizer = open('microblog2011_tokenized.txt','w')
+f_tokenizer_in_report = open('microblog2011_tokenized_report.txt','w')
+
+num = 0
+
+tokenization_all = []
+
+for text_line in all_text:
+
+    # tokenization_results = word_tokenize(text_line)
+    tokenization_results = [w.text.lower() for w in nlp(text_line)]
+
+    tokenization_all += tokenization_results
+
+    f_tokenizer.write(str(tokenization_results)+'\n')
+
+    if(num<20):
+        f_tokenizer_in_report.write(str(num)+":\n")
+        f_tokenizer_in_report.write(text_line)
+        f_tokenizer_in_report.write(str(tokenization_results)+'\n')
+    
+    num += 1
+
+f_tokenizer.close()
+f_tokenizer_in_report.close()
 
 
-print(tokens_example)
-
-from gensim.corpora import Dictionary
-
-dct = Dictionary([tokens_example])  # initialize a Dictionary
-print(dct)
-unique_token_numbers = len(dct)
-print("unique_token_numbers:",unique_token_numbers)
-dct.save_as_text('foobar.txt')
-bag_of_words = dct.doc2bow(tokens_example)
-print(bag_of_words)
-token_numbers = 0
-for i in bag_of_words:
-    token_numbers += i[1]
-print("token_numbers:",token_numbers)
-
-ratio = unique_token_numbers / token_numbers
-
-print("type/token ratio:", ratio)
-
-# write the result into .txt file
-output_result_file = open("microblog2011_tokenized.txt","w")
-output_result_file.write("sth to write")
-output_result_file.close()
+tokenization_statistic(tokenization_all, 'Tokens.txt', 'type_token_ratio_results.txt')
 
 stopwords_list = []
 with open('stopwords.txt','r') as f:
@@ -103,41 +103,27 @@ for punc in punctuations:
 stopwords_with_punctuations = stopwords_list + punctuation_list
 
 filtered_sentence = []
-for w in tokens_example: 
+for w in tokenization_all: 
     if w not in stopwords_with_punctuations: 
         filtered_sentence.append(w)
-print(filtered_sentence)
+# print(filtered_sentence)
 
+tokenization_statistic(filtered_sentence, 'Tokens_without_stops.txt', 'type_token_ratio_without_stops_results.txt')
 
+bigram_frequency = nltk.FreqDist(nltk.bigrams(filtered_sentence))
 
-# create special case text file
+# print(bigram_frequency)
 
-f_special_case = open("transfered_special_case.txt","w")
+bigrams_list = []
+for item in bigram_frequency.keys():
+    bigrams_list.append((item,bigram_frequency[item]))
+# print(bigrams_list)
 
-with open("special_case.txt","r") as f:
-    for line in f:
-        transfered_special_case_example = line.split("/")[0].replace('"','').replace(':','').replace(',','')
-        f_special_case.write(transfered_special_case_example+"\n") 
-        #just use the most common case
+bigrams_list = sorted(bigrams_list,key=lambda x: x[1],reverse=True)
 
-f_special_case.close()
-
-f_special_case = open("transfered_special_case.txt","r")
-
-with open('transfered_special_case_2.txt', 'w') as f_special_case_2:
-    for line in f_special_case:
-        if not line.strip():
-            continue  # skip the empty line
-        line_split = line.split(" ")
-        capitalized_line = ""
-        for l in range(len(line_split)):
-            if l == 0 or l == 1:
-                capitalized_line += line_split[l].capitalize()
-            else:
-                capitalized_line += line_split[l]
-            if l < len(line_split)-1:
-                capitalized_line += " "
-        f_special_case_2.write(line)  # non-empty line. Write it to output
-        f_special_case_2.write(capitalized_line)
-
-f_special_case.close()
+num = 0
+with open("bigrams",'w') as bigrams_file:
+    bigrams_file.write("number" + " " + "word" + " " + "frequency" +"\n")
+    for item in bigrams_list:
+        bigrams_file.write(str(num) + " " + item[0][0] +" "+ item[0][1] + " " + str(item[1]) +"\n")
+        num += 1
