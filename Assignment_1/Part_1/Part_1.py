@@ -41,6 +41,9 @@ def tokenization_statistic(tokenization_all,Tokens_file_name,results_file_name):
 
     # print("type/token ratio:", ratio)
 
+    if(results_file_name == None):
+        return
+    
     with open(results_file_name, 'w') as f_ttr_results:
         f_ttr_results.write("unique_token_numbers:"+str(unique_token_numbers)+"\n")
         f_ttr_results.write("token_numbers:"+str(token_numbers)+"\n")
@@ -92,7 +95,6 @@ for text_line in all_text:
 f_tokenizer.close()
 f_tokenizer_in_report.close()
 
-
 tokenization_statistic(tokenization_all, 'Tokens.txt', 'type_token_ratio_results.txt')
 
 stopwords_list = []
@@ -106,6 +108,27 @@ punctuations="!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
 punctuation_list = []
 for punc in punctuations:
     punctuation_list.append(punc)
+
+if(' ' in tokenization_all):
+    tokenization_all.remove(' ')
+if('...' in tokenization_all):
+    tokenization_all.remove('...')
+if('…' in tokenization_all):
+    tokenization_all.remove('…')
+if('..' in tokenization_all):
+    tokenization_all.remove('..')
+if('█' in tokenization_all):
+    tokenization_all.remove('█')
+ 
+filtered_sentence = []
+for w in tokenization_all: 
+    if w not in punctuation_list: 
+        filtered_sentence.append(w)
+# print(filtered_sentence)
+
+tokenization_statistic(filtered_sentence, 'Tokens_without_punctuation.txt', None)
+
+
 
 stopwords_with_punctuations = stopwords_list + punctuation_list
 
