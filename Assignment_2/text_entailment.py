@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import csv
+import time
 
 # Reference: https://github.com/Steven-Hewitt/Entailment-with-Tensorflow
 
@@ -61,8 +62,8 @@ def fit_to_size(matrix, shape):
     res[slices] = matrix[slices]
     return res
 
-def split_data_into_scores():
-    with open("SICK_train.txt","r") as data:
+def split_data_into_scores(file_name):
+    with open(file_name,"r") as data:
         train = csv.DictReader(data, delimiter='\t')
         evi_sentences = []
         hyp_sentences = []
@@ -74,10 +75,13 @@ def split_data_into_scores():
             evi_sentences.append(np.vstack(
                     sentence2sequence(row["sentence_B"].lower())[0]))
             if row["entailment_judgment"] == 'ENTAILMENT':
+                # labels.append([0])
                 labels.append([1,0,0])
             elif row["entailment_judgment"] == 'NEUTRAL':
+                # labels.append([1])
                 labels.append([0,1,0])
             elif row["entailment_judgment"] == 'CONTRADICTION':
+                # labels.append([2])
                 labels.append([0,0,1])
             else:
                 assert row["entailment_judgment"] == "INVALID"
@@ -90,7 +94,7 @@ def split_data_into_scores():
         return (hyp_sentences, evi_sentences), labels, np.array(scores)
 
 def model_training():
-    data_feature_list, correct_values, correct_scores = split_data_into_scores()
+    data_feature_list, correct_values, correct_scores = split_data_into_scores("SICK_train.txt")
 
     correct_values = np.array(correct_values)
 
@@ -201,6 +205,7 @@ def model_training():
     except:
         pass
 
+    saver = tf.train.Saver()
     # Launch the Tensorflow session
     sess = tf.Session()
     sess.run(init)
@@ -236,11 +241,109 @@ def model_training():
             print("Iter " + str(i/batch_size) + ", Minibatch Loss= " + \
                 "{:.6f}".format(tmp_loss) + ", Training Accuracy= " + \
                 "{:.5f}".format(acc))
+    saver.save(sess,"models/model.ckpt")
     sess.close()
+
+# def softmax(x): 
+#     e_x = np.exp(x - np.max(x)) 
+#     return e_x / e_x.sum(axis=0) 
+
+def output_label(item):
+    one_hot = 0 
+    max_value = item[0]
+    if(item[1] > max_value):
+        one_hot = 1
+        max_value = item[1]
+    if(item[2] > max_value):
+        one_hot = 2
+
+    if(one_hot == 0):
+        return np.array([1,0,0])
+    elif(one_hot == 1):
+        return np.array([0,1,0])
+    else:
+        return np.array([0,0,1])
+
+def model_prediction():
+    with open("SICK_test_annotated.txt","r") as data:
+        test = csv.DictReader(data, delimiter='\t')
+        evi_sentences = []
+        hyp_sentences = []
+        labels = []
+        for row in test:
+            hyp_sentences.append(np.vstack(
+                    sentence2sequence(row["sentence_A"].lower())[0]))
+            evi_sentences.append(np.vstack(
+                    sentence2sequence(row["sentence_B"].lower())[0]))
+            if row["entailment_judgment"] == 'ENTAILMENT':
+                labels.append(0)
+            elif row["entailment_judgment"] == 'NEUTRAL':
+                labels.append(1)
+            elif row["entailment_judgment"] == 'CONTRADICTION':
+                labels.append(2)
+        
+        hyp_sentences = np.stack([fit_to_size(x, (max_hypothesis_length, vector_size))
+                          for x in hyp_sentences])
+        evi_sentences = np.stack([fit_to_size(x, (max_evidence_length, vector_size))
+                          for x in evi_sentences])
+
+    l_h, l_e = max_hypothesis_length, max_evidence_length
+    N, D, H = batch_size, vector_size, hidden_size
+    l_seq = l_h + l_e
+
+    tf.reset_default_graph()
+
+    lstm = tf.contrib.rnn.BasicLSTMCell(lstm_size)
+    lstm_drop =  tf.contrib.rnn.DropoutWrapper(lstm, input_p, output_p)
+
+    hyp = tf.placeholder(tf.float32, [N, l_h, D], 'hypothesis')
+    evi = tf.placeholder(tf.float32, [N, l_e, D], 'evidence')
+    y = tf.placeholder(tf.float32, [N, 3], 'label')
+
+    lstm_back = tf.contrib.rnn.BasicLSTMCell(lstm_size)
+
+    lstm_drop_back = tf.contrib.rnn.DropoutWrapper(lstm_back, input_p, output_p)
+
+    fc_weight = tf.get_variable('fc_weight', [2*hidden_size, 3])
+    # fc_weight: Storage for the fully connected layer's weights.
+    fc_bias = tf.get_variable('bias', [3])
+
+    x = tf.concat([hyp, evi], 1) # N, (Lh+Le), d
+    # Permuting batch_size and n_steps
+    x = tf.transpose(x, [1, 0, 2]) # (Le+Lh), N, d
+    # Reshaping to (n_steps*batch_size, n_input)
+    x = tf.reshape(x, [-1, vector_size]) # (Le+Lh)*N, d
+    # Split to get a list of 'n_steps' tensors of shape (batch_size, n_input)
+    x = tf.split(x, l_seq,)
+
+    rnn_outputs, _, _ = tf.contrib.rnn.static_bidirectional_rnn(lstm, lstm_back,
+                                                                x, dtype=tf.float32)
+
+    classification_scores = tf.matmul(rnn_outputs[-1], fc_weight) + fc_bias
+
+    saver = tf.train.Saver()
+    
+    with tf.Session() as sess:
+        saver.restore(sess,"models/model.ckpt")
+        test_batch_num= int(len(hyp_sentences)/128)
+        for batch in range(test_batch_num):
+            prediction_labels = []
+            hyps, evis = (hyp_sentences[batch*128:(batch+1)*128,:],
+                        evi_sentences[batch*128:(batch+1)*128])
+            prediction = sess.run(classification_scores, feed_dict={hyp: hyps,
+                                                            evi: evis})
+            for i in prediction:
+                prediction_labels.append(np.argmax(i))
+            print(prediction_labels)
+            print(labels[batch*128:(batch+1)*128])
+            time.sleep(10)
+        # one more sentences batch
+
 
 
 def main():
-    model_training()
+    # model_training()
+    model_prediction()
 
 if __name__ == '__main__':
     main()
