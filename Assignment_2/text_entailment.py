@@ -248,6 +248,77 @@ def model_training():
 #     e_x = np.exp(x - np.max(x)) 
 #     return e_x / e_x.sum(axis=0) 
 
+def confusion_values(predictions,labels):
+
+    # true positive, true negative, false positive, false negative
+    # 0 is majority, 1 is minority
+    TP = 0
+    TN = 0
+    FP = 0
+    FN = 0
+
+    total_num = len(predictions)
+
+    for i in range(total_num):
+        if labels[i] == 1:
+            if predictions[i] == 1:
+                TP += 1
+            else:
+                FN += 1
+        else:
+            if predictions[i] == 1:
+                FP += 1
+            else:
+                TN += 1
+    return TP,TN,FP,FN
+
+def evaluation_calculation(predictions,labels):
+    predictions = np.array(predictions)
+    labels = np.array(labels)
+    numbers = len(predictions)
+    accuracy_sum = 0
+    predictions_entailment = []
+    labels_entailment = []
+    predictions_neutral = []
+    labels_neutral = []
+    predictions_contradiction = []
+    labels_contradiction = []
+    for i in range(numbers):
+        if(predictions[i] == labels[i]):
+            accuracy_sum += 1
+
+        if(predictions[i] == 0):
+            predictions_entailment.append(1)
+            predictions_neutral.append(0)
+            predictions_contradiction.append(0)
+        elif(predictions[i] == 1):
+            predictions_entailment.append(0)
+            predictions_neutral.append(1)
+            predictions_contradiction.append(0)
+        elif(predictions[i] == 2):
+            predictions_entailment.append(0)
+            predictions_neutral.append(0)
+            predictions_contradiction.append(1)
+
+        if(labels[i] == 0):
+            labels_entailment.append(1)
+            labels_neutral.append(0)
+            labels_contradiction.append(0)
+        elif(labels[i] == 1):
+            labels_entailment.append(0)
+            labels_neutral.append(1)
+            labels_contradiction.append(0)
+        elif(labels[i] == 2):
+            labels_entailment.append(0)
+            labels_neutral.append(0)
+            labels_contradiction.append(1)
+
+    entailment_TP,entailment_TN,entailment_FP,entailment_FN = confusion_values(predictions_entailment,labels_entailment)
+    neutral_TP,neutral_TN,neutral_FP,neutral_FN = confusion_values(predictions_neutral,labels_neutral)
+    contradiction_TP,contradiction_TN,contradiction_FP,contradiction_FN = confusion_values(predictions_contradiction,labels_contradiction)
+    return accuracy_sum,entailment_TP,entailment_TN,entailment_FP,entailment_FN,neutral_TP,neutral_TN,neutral_FP,neutral_FN,contradiction_TP,contradiction_TN,contradiction_FP,contradiction_FN
+
+
 def output_label(item):
     one_hot = 0 
     max_value = item[0]
@@ -265,6 +336,8 @@ def output_label(item):
         return np.array([0,0,1])
 
 def model_prediction():
+    accuracy_sum,entailment_TP,entailment_TN,entailment_FP,entailment_FN,neutral_TP,neutral_TN,neutral_FP,neutral_FN,contradiction_TP,contradiction_TN,contradiction_FP,contradiction_FN=0,0,0,0,0,0,0,0,0,0,0,0,0
+
     with open("SICK_test_annotated.txt","r") as data:
         test = csv.DictReader(data, delimiter='\t')
         evi_sentences = []
@@ -334,12 +407,67 @@ def model_prediction():
                                                             evi: evis})
             for i in prediction:
                 prediction_labels.append(np.argmax(i))
-            print(prediction_labels)
-            print(labels[batch*128:(batch+1)*128])
-            time.sleep(10)
-        # one more sentences batch
+            accuracy_sum_,entailment_TP_,entailment_TN_,entailment_FP_,entailment_FN_,neutral_TP_,neutral_TN_,neutral_FP_,neutral_FN_,contradiction_TP_,contradiction_TN_,contradiction_FP_,contradiction_FN_ = evaluation_calculation(prediction_labels,labels[batch*128:(batch+1)*128])
+            accuracy_sum += accuracy_sum_
+            entailment_TP += entailment_TP_
+            entailment_TN += entailment_TN_
+            entailment_FP += entailment_FP_
+            entailment_FN += entailment_FN_
+            neutral_TP += neutral_TP_
+            neutral_TN += neutral_TN_
+            neutral_FP += neutral_FP_
+            neutral_FN += neutral_FN_
+            contradiction_TP += contradiction_TP_
+            contradiction_TN += contradiction_TN_
+            contradiction_FP += contradiction_FP_
+            contradiction_FN += contradiction_FN_
+            # print(prediction_labels)
+            # print(labels[batch*128:(batch+1)*128])
+            # time.sleep(10)
 
+        # left_batch = len(hyp_sentences) - test_batch_num*128
+        # prediction_labels = []
+        # hyps, evis = (hyp_sentences[test_batch_num*128:len(hyp_sentences),:],
+        #             evi_sentences[test_batch_num*128:len(hyp_sentences)])
+        # prediction = sess.run(classification_scores, feed_dict={hyp: hyps,
+        #                                                 evi: evis})
+        # for i in prediction:
+        #     prediction_labels.append(np.argmax(i))
+        # # print(prediction_labels)
+        # # print(labels[test_batch_num*128:len(hyp_sentences)])
+        # accuracy_sum_,entailment_TP_,entailment_TN_,entailment_FP_,entailment_FN_,neutral_TP_,neutral_TN_,neutral_FP_,neutral_FN_,contradiction_TP_,contradiction_TN_,contradiction_FP_,contradiction_FN_ = evaluation_calculation(prediction_labels,labels[test_batch_num*128:len(hyp_sentences)])
+        # accuracy_sum += accuracy_sum_
+        # entailment_TP += entailment_TP_
+        # entailment_TN += entailment_TN_
+        # entailment_FP += entailment_FP_
+        # entailment_FN += entailment_FN_
+        # neutral_TP += neutral_TP_
+        # neutral_TN += neutral_TN_
+        # neutral_FP += neutral_FP_
+        # neutral_FN += neutral_FN_
+        # contradiction_TP += contradiction_TP_
+        # contradiction_TN += contradiction_TN_
+        # contradiction_FP += contradiction_FP_
+        # contradiction_FN += contradiction_FN_
+        ######## ValueError: Cannot feed value of shape (63, 30, 200) for Tensor 'hypothesis:0', which has shape '(128, 30, 200)'
 
+    total_items = test_batch_num*128
+    f_results = open("results_part_1.txt",'w+')
+    f_results.write("accuracy: "+str(accuracy_sum/total_items)+"\n")
+    f_results.write("entailment_TP: "+str(entailment_TP)+"\n")
+    f_results.write("entailment_TN: "+str(entailment_TN)+"\n")
+    f_results.write("entailment_FP: "+str(entailment_FP)+"\n")
+    f_results.write("entailment_FN: "+str(entailment_FN)+"\n")
+    f_results.write("neutral_TP: "+str(neutral_TP)+"\n")
+    f_results.write("neutral_TN: "+str(neutral_TN)+"\n")
+    f_results.write("neutral_FP: "+str(neutral_FP)+"\n")
+    f_results.write("neutral_FN: "+str(neutral_FN)+"\n")
+    f_results.write("contradiction_TP: "+str(contradiction_TP)+"\n")
+    f_results.write("contradiction_TN: "+str(contradiction_TN)+"\n")
+    f_results.write("contradiction_FP: "+str(contradiction_FP)+"\n")
+    f_results.write("contradiction_FN: "+str(contradiction_FN)+"\n")
+
+    f_results.close()
 
 def main():
     # model_training()
