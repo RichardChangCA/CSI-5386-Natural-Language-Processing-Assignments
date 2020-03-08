@@ -25,7 +25,7 @@ max_hypothesis_length, max_evidence_length = 30, 30
 batch_size, vector_size, hidden_size = 128, 200, 64
 lstm_size = hidden_size
 weight_decay = 0.0001
-learning_rate = 0.01
+learning_rate = 0.1
 input_p, output_p = 0.5, 0.5 # dropout keep probability
 training_iterations_count = 1000000
 display_step = 100
@@ -171,8 +171,8 @@ def model_training():
         y_label = tf.cast(y, 'float32')
         predicts = tf.reshape(predicts,[N])
         y_label = tf.reshape(y_label,[N])
-        corr, _ = tf.contrib.metrics.streaming_pearson_correlation(predicts,y_label)
-        pearson_correlation = tf.reduce_mean(tf.cast(corr, tf.float32))
+        pearson_correlation, update_op = tf.contrib.metrics.streaming_pearson_correlation(predicts,y_label)
+        # pearson_correlation = tf.reduce_mean(tf.cast(corr, tf.float32))
 
     with tf.variable_scope("loss"):
         # mse = (y-classification_scores)**2
@@ -221,6 +221,7 @@ def model_training():
         
         # Run the optimization with these initialized values
         sess.run([opt_op], feed_dict={hyp: hyps, evi: evis, y: ys})
+        sess.run(update_op,feed_dict={hyp: hyps, evi: evis, y: ys})
         # display_step: how often the accuracy and loss should 
         #   be tested and displayed.
         if (i/batch_size) % display_step == 0:
@@ -306,11 +307,13 @@ def model_prediction():
             prediction = sess.run(classification_scores, feed_dict={hyp: hyps,
                                                             evi: evis})
             prediction_all = np.concatenate((prediction_all,np.array(prediction).flatten()))
-        print(scores[:test_batch_num*128].flatten())
-        print(prediction_all)
-        print("pearson_correlation: ", pearsonr(scores[:test_batch_num*128].flatten(),prediction_all))
-        print("mean squared error: ", mean_squared_error(scores[:test_batch_num*128].flatten(),prediction_all))
-        print("spearman correlation: ",spearmanr(scores[:test_batch_num*128].flatten(),prediction_all))
+        # print(np.array(scores[:test_batch_num*128]).flatten())
+        # print(prediction_all)
+        f_results_2 = open("results_part_2.txt",'w')
+        f_results_2.write("\npearson_correlation: "+ str(pearsonr(np.array(scores[:test_batch_num*128]).flatten(),prediction_all)))
+        f_results_2.write("\nmean squared error: "+ str(mean_squared_error(np.array(scores[:test_batch_num*128]).flatten(),prediction_all)))
+        f_results_2.write("\nspearman correlation: "+ str(spearmanr(np.array(scores[:test_batch_num*128]).flatten(),prediction_all)))
+        f_results_2.close()
     # total_items = test_batch_num*128
 
 def main():
