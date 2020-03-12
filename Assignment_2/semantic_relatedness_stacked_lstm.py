@@ -77,7 +77,7 @@ def split_data_into_scores(file_name):
                     sentence2sequence(row["sentence_A"].lower())[0]))
             evi_sentences.append(np.vstack(
                     sentence2sequence(row["sentence_B"].lower())[0]))
-            scores.append([float(row["relatedness_score"])])
+            scores.append(float(row["relatedness_score"]))
         
         hyp_sentences = np.stack([fit_to_size(x, (max_hypothesis_length, vector_size))
                           for x in hyp_sentences])
@@ -85,9 +85,21 @@ def split_data_into_scores(file_name):
                           for x in evi_sentences])          
         return hyp_sentences, evi_sentences, labels, np.array(scores)
 
-def pearson_correlation_metric(y_true,y_predict):
-    return K.variable(np.array(pearsonr(K.eval(y_true),K.eval(y_predict)))[0])
-    # K.constant
+# def pearson_correlation_metric(y_true,y_predict):
+#     return K.variable(np.array(pearsonr(K.eval(y_true),K.eval(y_predict)))[0])
+#     # K.constant
+
+def pearson_correlation_metric(y_true, y_pred):
+    #normalise
+    n_y_true = (y_true - K.mean(y_true[:])) / K.std(y_true[:])
+    n_y_pred = (y_pred - K.mean(y_pred[:])) / K.std(y_pred[:])  
+
+    top=K.sum((n_y_true[:]-K.mean(n_y_true[:]))*(n_y_pred[:]-K.mean(n_y_pred[:])),axis=[-1,-2])
+    bottom=K.sqrt(K.sum(K.pow((n_y_true[:]-K.mean(n_y_true[:])),2),axis=[-1,-2])*K.sum(K.pow(n_y_pred[:]-K.mean(n_y_pred[:]),2),axis=[-1,-2]))
+
+    result=top/bottom
+
+    return K.mean(result)
 
 def model_training():
     hyp_sentences, evi_sentences, correct_values, correct_scores = split_data_into_scores("SICK_train.txt")
@@ -112,12 +124,12 @@ def model_training():
     model.add(Bidirectional(LSTM(units=lstm_size)))
     model.add(Dropout(dropout_prop))
 
-    model.add(Dense(1,activation='sigmoid'))
+    model.add(Dense(1,activation='relu'))
 
     # model.compile('adam','mse',metrics=['mae'])
-    model.compile('adam','mse',metrics=[pearson_correlation_metric])
+    model.compile('sgd','mse',metrics=[pearson_correlation_metric])
 
-    model.fit(x_train,y_train,batch_size=batch_size,epochs=5,validation_data=[x_test,y_test])
+    model.fit(x_train,y_train,batch_size=batch_size,epochs=100,validation_data=[x_test,y_test])
     # with open("stacked_bidirectional_lstm_keras_model.txt",'w+') as fn:
     #     model.summary(print_fn=lambda x: fn.write(x + '\n'))
     model.save("models_stacked_lstm/models_stacked_lstm_relatedness.h5")
@@ -136,7 +148,7 @@ def model_prediction():
             evi_sentences.append(np.vstack(
                     sentence2sequence(row["sentence_B"].lower())[0]))
 
-            scores.append([float(row["relatedness_score"])])
+            scores.append(float(row["relatedness_score"]))
         
         hyp_sentences = np.stack([fit_to_size(x, (max_hypothesis_length, vector_size))
                           for x in hyp_sentences])
