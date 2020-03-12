@@ -28,34 +28,16 @@ train_b = fetch_20newsgroups(subset='train',
    categories=categories, shuffle=True, random_state=42)
 test_b = fetch_20newsgroups(subset='test',
    categories=categories, shuffle=True, random_state=42)
-import time
+
 print('size of training set: %s' % (len(train_b['data'])))
 print('size of validation set: %s' % (len(test_b['data'])))
 print('classes: %s' % (train_b.target_names))
-# time.sleep(10)
 
-print(train_b.target_names)
-# time.sleep(10)
 x_train = train_b.data
 y_train = train_b.target
-x_train = np.array(x_train)
-y_train = np.array(y_train)
-print("shape:",x_train.shape)
-print("shape:",y_train.shape)
-time.sleep(10)
-for i in range(len(x_train)):
-   print(x_train[i])
-   print(y_train[i])
-   break
+
 x_test = test_b.data
 y_test = test_b.target
-
-for i in range(len(x_test)):
-   print(x_test[i])
-   print(y_test[i])
-   break
-
-# time.sleep(10)
 
 """## STEP 1:  Load and Preprocess the Data
 Preprocess the data using the `texts_from_array function` (since the data resides in an array).
