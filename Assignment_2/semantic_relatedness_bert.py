@@ -3,6 +3,8 @@ import ktrain
 from ktrain import text as txt
 import csv
 import numpy as np
+from scipy.stats import pearsonr,spearmanr
+from sklearn.metrics import mean_squared_error
 
 # BERT Bidirectional Encoder Representations from Transformers
 
@@ -43,11 +45,22 @@ def model_training():
 
 def model_prediction():
     # reload the predictor
+
+    x_test, y_test = extract_data("SICK_test_annotated.txt")
+
     reloaded_predictor = ktrain.load_predictor('models_bert/bert_regression_predictor')
 
-    prediction = predictor.predict(x_test)
+    prediction = reloaded_predictor.predict(x_test)
 
-    print(prediction)
+    prediction = prediction.flatten()
+
+    # print(prediction)
+
+    f_results_2 = open("results_part_2_bert.txt",'w')
+    f_results_2.write("\npearson_correlation: "+ str(pearsonr(y_test,prediction)))
+    f_results_2.write("\nmean squared error: "+ str(mean_squared_error(y_test,prediction)))
+    f_results_2.write("\nspearman correlation: "+ str(spearmanr(y_test,prediction)))
+    f_results_2.close()
 
 def main():
     # model_training()

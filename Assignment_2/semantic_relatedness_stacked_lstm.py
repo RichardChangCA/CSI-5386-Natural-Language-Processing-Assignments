@@ -9,7 +9,8 @@ from tensorflow.python.keras.layers import LSTM, Bidirectional, Dropout, Dense
 from tensorflow.python.keras.optimizers import Adam
 from tensorflow.python.keras import models, layers
 import tensorflow.python.keras.backend as K
-from scipy.stats import pearsonr
+from scipy.stats import pearsonr,spearmanr
+from sklearn.metrics import mean_squared_error
 
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 print("physical_devices-------------", len(physical_devices))
@@ -141,7 +142,7 @@ def model_prediction():
         test = csv.DictReader(data, delimiter='\t')
         evi_sentences = []
         hyp_sentences = []
-        labels = []
+        scores = []
         for row in test:
             hyp_sentences.append(np.vstack(
                     sentence2sequence(row["sentence_A"].lower())[0]))
@@ -157,19 +158,30 @@ def model_prediction():
 
     
     x = np.concatenate((hyp_sentences, evi_sentences), 1)
-    scores = correct_scores
+    scores = np.array(scores)
 
-    model = models.load_model("models_stacked_lstm/models_stacked_lstm_relatedness.h5")
+    dependencies = {
+        'pearson_correlation_metric': pearson_correlation_metric
+    }
+    model = models.load_model("models_stacked_lstm/models_stacked_lstm_relatedness.h5",custom_objects=dependencies)
 
-    prediction = model.predict_classes(x)
+    prediction = model.predict(x)
 
     prediction = np.array(prediction)
 
-    
+    prediction = prediction.flatten()
+
+    f_results_2 = open("results_part_2_stacked_lstm.txt",'w')
+    f_results_2.write("\npearson_correlation: "+ str(pearsonr(scores,prediction)))
+    f_results_2.write("\nmean squared error: "+ str(mean_squared_error(scores,prediction)))
+    f_results_2.write("\nspearman correlation: "+ str(spearmanr(scores,prediction)))
+    f_results_2.close()
+
+    # print(prediction)
 
 def main():
-    model_training()
-    # model_prediction()
+    # model_training()
+    model_prediction()
 
 if __name__ == '__main__':
     main()

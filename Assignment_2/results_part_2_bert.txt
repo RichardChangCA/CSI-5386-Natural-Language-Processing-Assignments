@@ -1,0 +1,4 @@
+
+pearson_correlation: (0.8841064538147344, 0.0)
+mean squared error: 0.23794722370679577
+spearman correlation: SpearmanrResult(correlation=0.8307102230419494, pvalue=0.0)
