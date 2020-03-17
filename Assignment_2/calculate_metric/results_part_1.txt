@@ -1,0 +1,13 @@
+accuracy: 0.5962171052631579
+entailment_TP: 0
+entailment_TN: 3450
+entailment_FP: 0
+entailment_FN: 1414
+neutral_TP: 2438
+neutral_TN: 506
+neutral_FP: 1628
+neutral_FN: 292
+contradiction_TP: 462
+contradiction_TN: 3808
+contradiction_FP: 336
+contradiction_FN: 258

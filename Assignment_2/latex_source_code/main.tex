@@ -1,0 +1,328 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{multirow}
+
+\newcommand\MyBox[2]{
+  \fbox{\lower0.75cm
+    \vbox to 1.7cm{\vfil
+      \hbox to 1.7cm{\hfil\parbox{1.4cm}{#1\\#2}\hfil}
+      \vfil}%
+  }%
+}
+
+\title{CSI5386 NLP Assignment II Text Entailment and Semantic Relatedness}
+\author{Lingfeng Zhang 300134245 Ottawa University \and
+Yu Sun 8472921 Carleton University}
+\date{March 2020}
+
+\begin{document}
+
+\maketitle
+
+GitHub clickable link: 
+
+\href{https://github.com/RichardChangCA/CSI-5386-Natural-Language-Processing-Assignments/tree/master/Assignment_2}{\url{https://github.com/RichardChangCA/CSI-5386-Natural-Language-Processing-Assignments/tree/master/Assignment_2}}
+
+\noindent
+To fulfill this assignment, firstly we did some research together, like analysing the dataset distribution and basic model for these two tasks. After discussion, we began to do the implementation and wrote the report. 
+For implementation, Lingfeng is mainly responsible for coding while Yu is for reviewing. 
+For report, Yu is mainly for writing the report and Lingfeng is for revising. 
+For classification task, the classes distribution is imbalanced. NEUTRAL is the majority class, poor classification model may be difficult to classify ENTAILMENT and CONTRADICTION, so precision, recall and F-measure are also used to evaluate models.
+
+For the whole assignment, we used 3 different models to finish task 1 \& 2: Bidirectional LSTM, Stacked Bi-LSTM, and bert. We finally found bert performs the best among these models, so we generate the file "Results.txt" by using trained bert model.
+
+\section{Task 1: Text entailment}
+Textual entailment tries to discern whether a continuous sentence pairs is related. There are three relationship categories: they are positive entailment when the first sentence proves the second sentence is true, negative entailment is on the contrary, neutral entailment means there are no correlation between the pairs.
+
+For the text entailment, it contains two texts including T(the text) and H(the hypothesis) and three relations between them. The relations can be represented as ENTAILMENT, CONTRADICTION and NEUTRAL. What we need to do is to infer the relations from the text to the hypothesis. There are various approaches to solve this task, like Lexical Approaches,  Machine Learning Approaches, Approaches based on Graph Matching and Semantics-based Approaches\cite{ghuge2014survey}. In our assignment, we mainly focused on deep learning methods, using three different models including Seq2Seq with Bi-LSTM, Seq2Seq with stacked Bi-LSTM and Bert.
+
+Sometimes, stop words may have a negative impact on the results of the classifier. So the dropout regularization method can be implemented to decrease the importance of stop words intelligently. In addition, dropout can also avoid overfitting to some extent.
+
+Bi-directional LSTM because both premise and hypothesis can be reviewed in both forward and backward directions. It is suitable to find the relationship between premise and hypothesis.
+
+For Seq2Seq with Bi-LSTM, we used the glove for word embedding, with three neuron nodes of binary value as the output, which is one-hot encoding method. The Seq2Seq with Bi-LSTM model is implemented by TensorFlow 1.x version. For Seq2Seq with stacked Bi-LSTM, it is similar with basic one, except using the stacked Bi-LSTM in hidden layer because the deeper hidden layers, the better performance in deep learning theoretically. The stacked Bi-LSTM model is implemented by TensorFlow 2.x version. For Bert, it is a end-to-end model and we used ktrain package for implementation and this package is based on TensorFlow 2.x version. The source code are listed in zip file, the three models are named by "text\_entailment.py", "text\_entailment\_stacked\_lstm.py" and "text\_entailment\_bert.py" respectively. In each python file, there are two main functions for model training and prediction, just run the file "text\_entailment.py" under TensorFlow 1.x and other files under TensorFlow 2.x.
+
+To evaluate the result against the gold standard, we use the following measurements:  accuracy, consufion matrices, precision, recall and F-measure.
+
+\begin{equation}
+accuracy=\frac{TP+TN}{TP+FP+FN+TN};
+\end{equation}
+\begin{equation}
+precision=\frac{TP}{TP+FP};
+\end{equation}
+\begin{equation}
+recall=\frac{TP}{TP+FN};
+\end{equation}
+\begin{equation}
+F-measure=2.\: \frac{precision\: .\: recall}{precision+recall}
+\end{equation}
+
+Since this task has 3 classes, one-vs-others method is used to build up confusion matrices. Firstly, we regard ENTAILMENT as one class and CONTRADICTION \& NEUTRAL as another class, which converts a 3 classes task to a binary classes task. And so on.
+
+Confusion matrix of Seq2Seq with Bi-LSTM, ENTAILMENT as positive, and others as negative.
+
+\noindent
+\renewcommand\arraystretch{1.5}
+\setlength\tabcolsep{0pt}
+\begin{tabular}{c >{\bfseries}r @{\hspace{0.7em}}c @{\hspace{0.4em}}c @{\hspace{0.7em}}l}
+  \multirow{10}{*}{\parbox{1.1cm}{\bfseries\raggedleft actual\\ value}} & 
+    & \multicolumn{2}{c}{\bfseries Prediction outcome} & \\
+  & & \bfseries p & \bfseries n & \bfseries total \\
+  & p$'$ & \MyBox{TP}{0} & \MyBox{FN}{1414} & 1414 \\[2.4em]
+  & n$'$ & \MyBox{FP}{0} & \MyBox{TN}{3450} & 3450 \\
+  & total & 0 & 4864 &
+\end{tabular}
+
+precision:0.0
+
+recall:0.0
+
+f-measure:0.0
+
+Confusion matrix of Seq2Seq with Bi-LSTM, NEUTRAL as positive, and others as negative.
+
+\noindent
+\renewcommand\arraystretch{1.5}
+\setlength\tabcolsep{0pt}
+\begin{tabular}{c >{\bfseries}r @{\hspace{0.7em}}c @{\hspace{0.4em}}c @{\hspace{0.7em}}l}
+  \multirow{10}{*}{\parbox{1.1cm}{\bfseries\raggedleft actual\\ value}} & 
+    & \multicolumn{2}{c}{\bfseries Prediction outcome} & \\
+  & & \bfseries p & \bfseries n & \bfseries total \\
+  & p$'$ & \MyBox{TP}{2438} & \MyBox{FN}{292} & 2730 \\[2.4em]
+  & n$'$ & \MyBox{FP}{1628} & \MyBox{TN}{506} & 2134 \\
+  & total & 4066 & 798 &
+\end{tabular}
+
+precision:0.5996064928676832
+
+recall:0.8930402930402931
+
+f-measure:0.7174808711006475
+
+Confusion matrix of Seq2Seq with Bi-LSTM, CONTRADICTION as positive, and others as negative.
+
+\noindent
+\renewcommand\arraystretch{1.5}
+\setlength\tabcolsep{0pt}
+\begin{tabular}{c >{\bfseries}r @{\hspace{0.7em}}c @{\hspace{0.4em}}c @{\hspace{0.7em}}l}
+  \multirow{10}{*}{\parbox{1.1cm}{\bfseries\raggedleft actual\\ value}} & 
+    & \multicolumn{2}{c}{\bfseries Prediction outcome} & \\
+  & & \bfseries p & \bfseries n & \bfseries total \\
+  & p$'$ & \MyBox{TP}{462} & \MyBox{FN}{258} & 720 \\[2.4em]
+  & n$'$ & \MyBox{FP}{336} & \MyBox{TN}{3808} & 4144 \\
+  & total & 798 & 4066 &
+\end{tabular}
+
+precision:0.5789473684210527
+
+recall:0.6416666666666667
+
+f-measure:0.6086956521739131
+
+Confusion matrix of Seq2Seq with stacked Bi-LSTM, ENTAILMENT as positive, and others as negative.
+
+\noindent
+\renewcommand\arraystretch{1.5}
+\setlength\tabcolsep{0pt}
+\begin{tabular}{c >{\bfseries}r @{\hspace{0.7em}}c @{\hspace{0.4em}}c @{\hspace{0.7em}}l}
+  \multirow{10}{*}{\parbox{1.1cm}{\bfseries\raggedleft actual\\ value}} & 
+    & \multicolumn{2}{c}{\bfseries Prediction outcome} & \\
+  & & \bfseries p & \bfseries n & \bfseries total \\
+  & p$'$ & \MyBox{TP}{792} & \MyBox{FN}{622} & 1414 \\[2.4em]
+  & n$'$ & \MyBox{FP}{805} & \MyBox{TN}{2708} & 3513 \\
+  & total & 1597 & 3330 &
+\end{tabular}
+
+precision:0.49592986850344395
+
+recall:0.5601131541725601
+
+f-measure:0.5260710727333112
+
+Confusion matrix of Seq2Seq with stacked Bi-LSTM, NEUTRAL as positive, and others as negative.
+
+\noindent
+\renewcommand\arraystretch{1.5}
+\setlength\tabcolsep{0pt}
+\begin{tabular}{c >{\bfseries}r @{\hspace{0.7em}}c @{\hspace{0.4em}}c @{\hspace{0.7em}}l}
+  \multirow{10}{*}{\parbox{1.1cm}{\bfseries\raggedleft actual\\ value}} & 
+    & \multicolumn{2}{c}{\bfseries Prediction outcome} & \\
+  & & \bfseries p & \bfseries n & \bfseries total \\
+  & p$'$ & \MyBox{TP}{1717} & \MyBox{FN}{1076} & 2793 \\[2.4em]
+  & n$'$ & \MyBox{FP}{764} & \MyBox{TN}{1370} & 2134 \\
+  & total & 2481 & 2446 &
+\end{tabular}
+
+precision:0.6920596533655784
+
+recall:0.614751163623344
+
+f-measure:0.6511186954872962
+
+Confusion matrix of Seq2Seq with stacked Bi-LSTM, CONTRADICTION as positive, and others as negative.
+
+\noindent
+\renewcommand\arraystretch{1.5}
+\setlength\tabcolsep{0pt}
+\begin{tabular}{c >{\bfseries}r @{\hspace{0.7em}}c @{\hspace{0.4em}}c @{\hspace{0.7em}}l}
+  \multirow{10}{*}{\parbox{1.1cm}{\bfseries\raggedleft actual\\ value}} & 
+    & \multicolumn{2}{c}{\bfseries Prediction outcome} & \\
+  & & \bfseries p & \bfseries n & \bfseries total \\
+  & p$'$ & \MyBox{TP}{535} & \MyBox{FN}{185} & 720 \\[2.4em]
+  & n$'$ & \MyBox{FP}{314} & \MyBox{TN}{3893} & 4207 \\
+  & total & 849 & 4078 &
+\end{tabular}
+
+precision:0.6301531213191991
+
+recall:0.7430555555555556
+
+f-measure:0.6819630337794774
+
+Confusion matrix of Bert, ENTAILMENT as positive, and others as negative.
+
+\noindent
+\renewcommand\arraystretch{1.5}
+\setlength\tabcolsep{0pt}
+\begin{tabular}{c >{\bfseries}r @{\hspace{0.7em}}c @{\hspace{0.4em}}c @{\hspace{0.7em}}l}
+  \multirow{10}{*}{\parbox{1.1cm}{\bfseries\raggedleft actual\\ value}} & 
+    & \multicolumn{2}{c}{\bfseries Prediction outcome} & \\
+  & & \bfseries p & \bfseries n & \bfseries total \\
+  & p$'$ & \MyBox{TP}{1256} & \MyBox{FN}{158} & 1414 \\[2.4em]
+  & n$'$ & \MyBox{FP}{378} & \MyBox{TN}{3135} & 3513 \\
+  & total & 1634 & 3293 &
+\end{tabular}
+
+precision:0.7686658506731946
+
+recall:0.8882602545968883
+
+f-measure:0.8241469816272966
+
+Confusion matrix of Bert, NEUTRAL as positive, and others as negative.
+
+\noindent
+\renewcommand\arraystretch{1.5}
+\setlength\tabcolsep{0pt}
+\begin{tabular}{c >{\bfseries}r @{\hspace{0.7em}}c @{\hspace{0.4em}}c @{\hspace{0.7em}}l}
+  \multirow{10}{*}{\parbox{1.1cm}{\bfseries\raggedleft actual\\ value}} & 
+    & \multicolumn{2}{c}{\bfseries Prediction outcome} & \\
+  & & \bfseries p & \bfseries n & \bfseries total \\
+  & p$'$ & \MyBox{TP}{2363} & \MyBox{FN}{430} & 2793 \\[2.4em]
+  & n$'$ & \MyBox{FP}{230} & \MyBox{TN}{1904} & 2134 \\
+  & total & 2593 & 2334 &
+\end{tabular}
+
+precision:0.9112996529116854
+
+recall:0.8460436806301468
+
+f-measure:0.8774600816932789
+
+Confusion matrix of Bert, CONTRADICTION as positive, and others as negative.
+
+\noindent
+\renewcommand\arraystretch{1.5}
+\setlength\tabcolsep{0pt}
+\begin{tabular}{c >{\bfseries}r @{\hspace{0.7em}}c @{\hspace{0.4em}}c @{\hspace{0.7em}}l}
+  \multirow{10}{*}{\parbox{1.1cm}{\bfseries\raggedleft actual\\ value}} & 
+    & \multicolumn{2}{c}{\bfseries Prediction outcome} & \\
+  & & \bfseries p & \bfseries n & \bfseries total \\
+  & p$'$ & \MyBox{TP}{616} & \MyBox{FN}{104} & 720 \\[2.4em]
+  & n$'$ & \MyBox{FP}{84} & \MyBox{TN}{4123} & 4207 \\
+  & total & 700 & 4227 &
+\end{tabular}
+
+precision:0.88
+
+recall:0.8555555555555555
+
+f-measure:0.8676056338028169
+
+The result lists below, we can see Bert beats other two models, with 25\% increment in the accuracy metric. Seq2Seq with Stacked Bi-LSTM get a better result than the basic one, but it is still worse than Bert. 
+
+We notice that Precision(Entailment) and Recall(Entailment) of Seq2Seq with Bi-LSTM are zero, probably because the data distribution is imbalanced and the Bi-LSTM model is not good enough.
+
+\begin{tabular}{ |p{4cm}||p{1.5cm}|p{2cm}|p{1.5cm}|  }
+\hline
+&Seq2Seq with Bi-LSTM & Seq2Seq with Stacked Bi-LSTM & Bert\\
+\hline
+Accuracy& 0.596 & 0.618 & \textbf{0.860} \\
+Precision(Entailment)& 0.000 & 0.496 & \textbf{0.769}\\
+Recall(Entailment)& 0.000 & 0.560 & \textbf{0.888}\\
+F-measure(Entailment)& 0.000 & 0.526 & \textbf{0.824}\\
+Precision(Neutral)& 0.600 & 0.693 & \textbf{0.911}\\
+Recall(Neutral)& \textbf{0.893} & 0.615 & 0.846\\
+F-measure(Neutral)& 0.717 & 0.651 & \textbf{0.877}\\
+Precision(Contraction)& 0.579 & 0.630 & \textbf{0.880}\\
+Recall(Contraction)& 0.642 & 0.743 & \textbf{0.856}\\
+F-measure(Contraction)& 0.609 & 0.682 & \textbf{0.868}\\
+\hline
+\end{tabular}
+
+\section{Task 2: Semantic relatedness}
+For the semantic relatedness, we need to compute how much connection between the two concepts. Generally speaking, if two words are similar, they usually have high relatedness. But in another situation, although two words are different, they can also have high relatedness, like car and street. In this task, we use the similar model as task 1, except the difference of output layer, loss function and evaluation metrics. We replace the neuron node of continuous value for output layer. The source code are listed in zip file, the three models are named by "semantic\_relatedness.py", "semantic\_relatedness\_stacked\_lstm.py" and "semantic\_relatedness\_bert.py" respectively,just run the file "semantic\_relatedness.py" under TensorFlow 1.x and other files under TensorFlow 2.x.
+
+In this task, we convert a classification problem to a regression problem. In regression problem, we use "minimize MSE" as the loss function and the output of the model is a value rather than a class. After the whole prediction, predicted values are scaled range from 0 to 5.
+
+To evaluate the result, we use the following measurement: mean squared error, Pearson correlation and Spearman correlation. We can see Bert have the best performance as well, But Seq2Seq with Stacked Bi-LSTM is worse that the basic one.
+\begin{equation}
+MSE = \sqrt{(\frac{1}{n})\sum_{i=1}^{n}(y_{i} - x_{i})^{2}}
+\end{equation}
+\begin{equation}
+Pearson = \frac{{}\sum_{i=1}^{n} (x_i - \overline{x})(y_i - \overline{y})}
+{\sqrt{\sum_{i=1}^{n} (x_i - \overline{x})^2(y_i - \overline{y})^2}};
+\end{equation}
+\begin{equation}
+Spearman = 1- {\frac {6 \sum d_i^2}{n(n^2 - 1)}}
+\end{equation}
+
+\begin{tabular}{ |p{4cm}||p{1.5cm}|p{2cm}|p{1.5cm}|  }
+\hline
+&Seq2Seq with Bi-LSTM & Seq2Seq with Stacked Bi-LSTM & Bert\\
+\hline
+mean squared error& 0.717 & 1.014 & \textbf{0.238} \\
+Pearson correlation& 0.588 & 0.176 & \textbf{0.884}\\
+Spearman correlation& 0.496 & 0.170 & \textbf{0.831}\\
+\hline
+\end{tabular}
+
+\section{Instruction of running source codes}
+
+Import dataset SICK\_test.txt, SICK\_test\_annotated.txt, SICK\_train.txt and SICK\_trial.txt in the same folder with source codes.
+
+Import glove pre-trained word-embedding files in the correct path.
+
+Create folder named as: models, models\_stacke\_lstm, models\_bert
+
+In TensorFlow 1.x version:
+
+python3 text\_entailment.py
+
+python3 semantic\_relatedness.py
+
+In TensorFlow 2.x version:
+
+Installing ktrain package: pip3 install ktrain
+
+python3 text\_entailment\_bert.py
+
+python3 semantic\_relatedness\_bert.py
+
+python3 text\_entailment\_stacked\_lstm.py
+
+python3 semantic\_relatedness\_stacked\_lstm.py
+
+All results can be generated as .txt files.
+
+GitHub clickable link: 
+
+\href{https://github.com/RichardChangCA/CSI-5386-Natural-Language-Processing-Assignments/tree/master/Assignment_2}{\url{https://github.com/RichardChangCA/CSI-5386-Natural-Language-Processing-Assignments/tree/master/Assignment_2}}
+
+\bibliography{natbib}
+
+\bibliographystyle{ieeetr}
+
+\end{document}
